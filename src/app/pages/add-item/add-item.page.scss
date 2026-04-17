@@ -1,0 +1,30 @@
+/* ======================================
+  PROG2005 Assignment 3
+  Add Item Page Styles - Tab 2
+  Author: Bingru Song
+  ====================================== */
+
+.feedback-item {
+  --padding-start: 16px;
+  --padding-end: 16px;
+  font-size: 14px;
+}
+
+.feedback-success {
+  --background: var(--ion-color-success-tint);
+  color: var(--ion-color-success-shade);
+}
+
+.feedback-error {
+  --background: var(--ion-color-danger-tint);
+  color: var(--ion-color-danger-shade);
+}
+
+ion-card {
+  margin: 16px;
+}
+
+.submit-button {
+  margin-top: 20px;
+  --border-radius: 8px;
+}

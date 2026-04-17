@@ -1,0 +1,118 @@
+<!-- ======================================
+  PROG2005 Assignment 3
+  Add Item Page - Add + Featured (Tab 2)
+  Author: Bingru Song
+  ====================================== -->
+
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Add Item</ion-title>
+    <app-help-widget [content]="helpContent" slot="end"></app-help-widget>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <!-- Success Feedback -->
+  <ion-item *ngIf="apiService.feedbackMessage() && apiService.feedbackMessage()?.type === 'success'" lines="none" class="feedback-item feedback-success">
+    <ion-icon name="checkmark-circle-outline" slot="start" color="success"></ion-icon>
+    <ion-label>{{ apiService.feedbackMessage()?.message }}</ion-label>
+  </ion-item>
+
+  <!-- Error Feedback -->
+  <ion-item *ngIf="apiService.feedbackMessage() && apiService.feedbackMessage()?.type === 'error'" lines="none" class="feedback-item feedback-error">
+    <ion-icon name="warning-outline" slot="start" color="danger"></ion-icon>
+    <ion-label>{{ apiService.feedbackMessage()?.message }}</ion-label>
+  </ion-item>
+
+  <!-- Add Item Form -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>New Inventory Item</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <form [formGroup]="addItemForm" (ngSubmit)="onSubmit()">
+
+        <!-- Item Name -->
+        <ion-item>
+          <ion-label position="stacked">Item Name *</ion-label>
+          <ion-input formControlName="itemName" placeholder="e.g. Wireless Headphones" type="text"></ion-input>
+          <ion-note *ngIf="getErrorMessage('itemName')" color="danger" slot="helper">{{ getErrorMessage('itemName') }}</ion-note>
+        </ion-item>
+
+        <!-- Category -->
+        <ion-item>
+          <ion-label position="stacked">Category *</ion-label>
+          <ion-select formControlName="category" placeholder="Select category" interface="action-sheet">
+            <ion-select-option *ngFor="let cat of categories" [value]="cat">{{ cat }}</ion-select-option>
+          </ion-select>
+          <ion-note *ngIf="getErrorMessage('category')" color="danger" slot="helper">{{ getErrorMessage('category') }}</ion-note>
+        </ion-item>
+
+        <!-- Quantity -->
+        <ion-item>
+          <ion-label position="stacked">Quantity *</ion-label>
+          <ion-input formControlName="quantity" placeholder="0" type="number" min="0"></ion-input>
+          <ion-note *ngIf="getErrorMessage('quantity')" color="danger" slot="helper">{{ getErrorMessage('quantity') }}</ion-note>
+        </ion-item>
+
+        <!-- Price -->
+        <ion-item>
+          <ion-label position="stacked">Price (AUD) *</ion-label>
+          <ion-input formControlName="price" placeholder="0.01" type="number" min="0.01" step="0.01"></ion-input>
+          <ion-note *ngIf="getErrorMessage('price')" color="danger" slot="helper">{{ getErrorMessage('price') }}</ion-note>
+        </ion-item>
+
+        <!-- Supplier Name -->
+        <ion-item>
+          <ion-label position="stacked">Supplier Name *</ion-label>
+          <ion-input formControlName="supplierName" placeholder="e.g. Tech Supplies Inc." type="text"></ion-input>
+          <ion-note *ngIf="getErrorMessage('supplierName')" color="danger" slot="helper">{{ getErrorMessage('supplierName') }}</ion-note>
+        </ion-item>
+
+        <!-- Featured Item Rating -->
+        <ion-item>
+          <ion-label position="stacked">Featured Item Rating *</ion-label>
+          <ion-input formControlName="featuredItem" placeholder="0" type="number" min="0"></ion-input>
+          <ion-note slot="helper">0 = Not featured, higher = more prominent</ion-note>
+        </ion-item>
+
+        <!-- Special Note (Optional) -->
+        <ion-item>
+          <ion-label position="stacked">Special Note (Optional)</ion-label>
+          <ion-textarea formControlName="specialNote" placeholder="Additional notes..." rows="3"></ion-textarea>
+        </ion-item>
+
+        <!-- Submit Button -->
+        <ion-button
+          expand="block"
+          type="submit"
+          [disabled]="addItemForm.invalid"
+          class="submit-button">
+          <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+          Add Item
+        </ion-button>
+
+      </form>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Featured Items Section -->
+  <ion-card *ngIf="apiService.featuredItems().length > 0">
+    <ion-card-header>
+      <ion-card-title>⭐ Featured Items</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let item of apiService.featuredItems()">
+          <ion-label>
+            <h3>{{ item.itemName }}</h3>
+            <p>{{ item.category }} | Rating: {{ item.featuredItem }}</p>
+          </ion-label>
+          <ion-badge slot="end" color="warning">${{ item.price.toFixed(2) }}</ion-badge>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>
