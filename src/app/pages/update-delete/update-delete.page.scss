@@ -1,0 +1,25 @@
+/* ======================================
+  PROG2005 Assignment 3
+  Update & Delete Page Styles - Tab 3
+  Author: daitongxiao
+  ====================================== */
+
+.feedback-item {
+  --padding-start: 16px;
+  --padding-end: 16px;
+  font-size: 14px;
+}
+
+.feedback-success {
+  --background: var(--ion-color-success-tint);
+  color: var(--ion-color-success-shade);
+}
+
+.feedback-error {
+  --background: var(--ion-color-danger-tint);
+  color: var(--ion-color-danger-shade);
+}
+
+ion-card {
+  margin: 16px;
+}
