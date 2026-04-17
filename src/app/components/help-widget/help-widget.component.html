@@ -1,0 +1,36 @@
+<!-- ======================================
+  PROG2005 Assignment 3
+  Help Widget Component
+  Author: daitongxiao
+  ====================================== -->
+
+<!-- Help Button -->
+<ion-button fill="clear" (click)="toggleHelp()" class="help-trigger">
+  <ion-icon name="help-circle-outline" slot="icon-only" color="light"></ion-icon>
+</ion-button>
+
+<!-- Help Panel Overlay -->
+<div *ngIf="isOpen()" class="help-overlay" (click)="closeHelp()"></div>
+
+<!-- Help Panel -->
+<div *ngIf="isOpen()" class="help-panel">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>{{ content.title }}</ion-title>
+      <ion-button fill="clear" slot="end" (click)="closeHelp()">
+        <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <ion-list>
+      <ion-item *ngFor="let section of content.sections">
+        <ion-label>
+          <h3>{{ section.heading }}</h3>
+          <p>{{ section.text }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</div>
