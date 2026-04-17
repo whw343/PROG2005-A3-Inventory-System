@@ -10,10 +10,10 @@
 </ion-button>
 
 <!-- Help Panel Overlay -->
-<div *ngIf="isOpen()" class="help-overlay" (click)="closeHelp()" [@overlayFade]></div>
+<div *ngIf="isOpen()" class="help-overlay" (click)="closeHelp()"></div>
 
 <!-- Help Panel -->
-<div *ngIf="isOpen()" class="help-panel" [@panelSlide]>
+<div *ngIf="isOpen()" class="help-panel">
   <ion-header>
     <ion-toolbar color="primary">
       <ion-title>
@@ -46,7 +46,7 @@
       </ion-item>
 
       <!-- Expanded content -->
-      <div *ngIf="expandedSection() >= 0" class="section-content" [@contentExpand]>
+      <div *ngIf="expandedSection() >= 0" class="section-content">
         <p>{{ content.sections[expandedSection()]?.text }}</p>
       </div>
     </ion-list>

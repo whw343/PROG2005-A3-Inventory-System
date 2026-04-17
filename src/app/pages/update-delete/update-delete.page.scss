@@ -31,11 +31,19 @@
   padding: 8px 16px;
 }
 
-/* Category filter chips */
-.filter-chips {
+/* Category filter chips container */
+.filter-chips-container {
+  display: flex;
+  overflow-x: auto;
   white-space: nowrap;
   padding: 0 16px 8px;
-  --background: transparent;
+  gap: 4px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.filter-chips-container::-webkit-scrollbar {
+  display: none;
 }
 
 .filter-chip {

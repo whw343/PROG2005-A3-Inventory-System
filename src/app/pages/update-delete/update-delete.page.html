@@ -37,7 +37,7 @@
     </ion-searchbar>
 
     <!-- Category Filter Chips -->
-    <ion-scroll scrollX="true" class="filter-chips">
+    <div class="filter-chips-container">
       <ion-chip [color]="categoryFilter() === '' ? 'primary' : 'medium'"
                 (click)="setCategoryFilter('')"
                 class="filter-chip">
@@ -49,7 +49,7 @@
                 class="filter-chip">
         <ion-label>{{ cat }}</ion-label>
       </ion-chip>
-    </ion-scroll>
+    </div>
 
     <!-- Items List -->
     <ion-list *ngIf="filteredItems().length > 0; else emptyList" class="items-list">
@@ -96,7 +96,7 @@
   </ng-container>
 
   <!-- ============ EDIT VIEW (when item selected) ============ -->
-  <div *ngIf="isEditMode()" class="edit-mode-container" [@slideIn]>
+  <div *ngIf="isEditMode()" class="edit-mode-container">
     <ion-card class="edit-card">
       <ion-card-header>
         <ion-card-subtitle>Editing Item #{{ selectedItem()?.itemId }}</ion-card-subtitle>
