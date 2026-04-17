@@ -9,6 +9,13 @@
   --padding-end: 8px;
 }
 
+/* Title icon */
+.title-icon {
+  font-size: 20px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
 /* Overlay backdrop */
 .help-overlay {
   position: fixed;
@@ -16,7 +23,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.5);
   z-index: 100;
   animation: fadeIn 0.2s ease-out;
 }
@@ -27,29 +34,97 @@
   top: 0;
   right: 0;
   width: 85%;
-  max-width: 400px;
+  max-width: 420px;
   height: 100%;
   background: var(--ion-background-color);
   z-index: 101;
-  animation: slideIn 0.3s ease-out;
-  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+  animation: slideIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.2);
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
-.help-panel h3 {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--ion-color-primary);
-  margin-bottom: 4px;
-}
-
-.help-panel p {
+/* Help intro */
+.help-intro {
+  padding: 16px 20px 8px;
   font-size: 13px;
-  line-height: 1.6;
+  color: var(--ion-color-medium);
+  border-bottom: 1px solid var(--ion-color-light);
+}
+
+/* Help sections list */
+.help-sections {
+  padding: 0;
+}
+
+.help-section-item {
+  --padding-start: 20px;
+  --padding-end: 16px;
+  --min-height: 52px;
+  --border-width: 0 0 1px 0;
+  transition: background-color 0.2s ease;
+}
+
+.help-section-item.section-expanded {
+  --background: var(--ion-color-primary-tint);
+}
+
+.section-icon {
+  font-size: 20px;
+  margin-right: 8px;
+}
+
+.section-heading {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.expand-icon {
+  font-size: 18px;
+  transition: transform 0.2s ease;
+}
+
+/* Expanded section content */
+.section-content {
+  padding: 12px 20px 16px;
+  background: var(--ion-color-light);
+  border-bottom: 1px solid var(--ion-color-light-shade);
+  animation: expandDown 0.25s ease-out;
+}
+
+.section-content p {
+  font-size: 13px;
+  line-height: 1.7;
   color: var(--ion-text-color);
   white-space: pre-wrap;
 }
 
+/* Help footer */
+.help-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  font-size: 12px;
+  color: var(--ion-color-medium);
+  border-top: 1px solid var(--ion-color-light);
+  margin-top: auto;
+}
+
+.help-footer kbd {
+  display: inline-block;
+  padding: 2px 8px;
+  font-family: monospace;
+  font-size: 11px;
+  background: var(--ion-color-light);
+  border: 1px solid var(--ion-color-medium);
+  border-radius: 4px;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
+/* Animations */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -60,9 +135,25 @@
   to { transform: translateX(0); }
 }
 
+@keyframes expandDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+  }
+}
+
 /* Responsive */
 @media (max-width: 576px) {
   .help-panel {
     width: 92%;
+    max-width: none;
+  }
+
+  .help-section-item {
+    --min-height: 48px;
   }
 }

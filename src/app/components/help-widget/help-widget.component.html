@@ -5,32 +5,56 @@
   ====================================== -->
 
 <!-- Help Button -->
-<ion-button fill="clear" (click)="toggleHelp()" class="help-trigger">
+<ion-button fill="clear" (click)="toggleHelp()" class="help-trigger" [attr.aria-label]="'Open help panel'">
   <ion-icon name="help-circle-outline" slot="icon-only" color="light"></ion-icon>
 </ion-button>
 
 <!-- Help Panel Overlay -->
-<div *ngIf="isOpen()" class="help-overlay" (click)="closeHelp()"></div>
+<div *ngIf="isOpen()" class="help-overlay" (click)="closeHelp()" [@overlayFade]></div>
 
 <!-- Help Panel -->
-<div *ngIf="isOpen()" class="help-panel">
+<div *ngIf="isOpen()" class="help-panel" [@panelSlide]>
   <ion-header>
-    <ion-toolbar>
-      <ion-title>{{ content.title }}</ion-title>
-      <ion-button fill="clear" slot="end" (click)="closeHelp()">
-        <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+    <ion-toolbar color="primary">
+      <ion-title>
+        <ion-icon name="information-circle-outline" class="title-icon"></ion-icon>
+        {{ content.title }}
+      </ion-title>
+      <ion-button fill="clear" slot="end" (click)="closeHelp()" [attr.aria-label]="'Close help panel'">
+        <ion-icon name="close-outline" slot="icon-only" color="light"></ion-icon>
       </ion-button>
     </ion-toolbar>
   </ion-header>
 
   <ion-content>
-    <ion-list>
-      <ion-item *ngFor="let section of content.sections">
-        <ion-label>
-          <h3>{{ section.heading }}</h3>
-          <p>{{ section.text }}</p>
-        </ion-label>
+    <!-- Introduction -->
+    <div class="help-intro">
+      <p>Tap a section below to expand detailed help information.</p>
+    </div>
+
+    <!-- Help Sections (accordion style) -->
+    <ion-list class="help-sections">
+      <ion-item *ngFor="let section of content.sections; let i = index"
+                [button]="true"
+                (click)="toggleSection(i)"
+                class="help-section-item"
+                [class.section-expanded]="expandedSection() === i">
+        <ion-icon [name]="section.icon || 'help-circle-outline'" slot="start" color="primary" class="section-icon"></ion-icon>
+        <ion-label class="section-heading">{{ section.heading }}</ion-label>
+        <ion-icon [name]="expandedSection() === i ? 'chevron-up-outline' : 'chevron-down-outline'"
+                  slot="end" color="medium" class="expand-icon"></ion-icon>
       </ion-item>
+
+      <!-- Expanded content -->
+      <div *ngIf="expandedSection() >= 0" class="section-content" [@contentExpand]>
+        <p>{{ content.sections[expandedSection()]?.text }}</p>
+      </div>
     </ion-list>
+
+    <!-- Footer -->
+    <div class="help-footer">
+      <ion-icon name="keyboard-outline" color="medium"></ion-icon>
+      <span>Press <kbd>Esc</kbd> to close</span>
+    </div>
   </ion-content>
 </div>
