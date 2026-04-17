@@ -13,89 +13,157 @@
 
 <ion-content [fullscreen]="true">
 
+  <!-- Pull to refresh -->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
   <!-- Feedback Messages -->
-  <ion-item *ngIf="apiService.feedbackMessage() && apiService.feedbackMessage()?.type === 'success'" lines="none" class="feedback-item feedback-success">
-    <ion-icon name="checkmark-circle-outline" slot="start" color="success"></ion-icon>
-    <ion-label>{{ apiService.feedbackMessage()?.message }}</ion-label>
-  </ion-item>
+  <div *ngIf="apiService.feedbackMessage()" class="feedback-banner"
+       [class.feedback-success]="apiService.feedbackMessage()?.type === 'success'"
+       [class.feedback-error]="apiService.feedbackMessage()?.type === 'error'">
+    <ion-icon [name]="apiService.feedbackMessage()?.type === 'success' ? 'checkmark-circle' : 'alert-circle'" slot="start"></ion-icon>
+    <span>{{ apiService.feedbackMessage()?.message }}</span>
+  </div>
 
-  <ion-item *ngIf="apiService.feedbackMessage() && apiService.feedbackMessage()?.type === 'error'" lines="none" class="feedback-item feedback-error">
-    <ion-icon name="warning-outline" slot="start" color="danger"></ion-icon>
-    <ion-label>{{ apiService.feedbackMessage()?.message }}</ion-label>
-  </ion-item>
+  <!-- ============ LIST VIEW (when not editing) ============ -->
+  <ng-container *ngIf="!isEditMode()">
 
-  <!-- Item List for Selection -->
-  <ion-list *ngIf="!selectedItem()">
-    <ion-list-header>
-      <ion-label>Select an item to edit</ion-label>
-    </ion-list-header>
-    <ion-item *ngFor="let item of apiService.inventory(); trackBy: trackByItemId" [button]="true" (click)="selectItem(item)">
-      <ion-label>
-        <h3>{{ item.itemName }}</h3>
-        <p>ID: {{ item.itemId }} | {{ item.category }} | Qty: {{ item.quantity }}</p>
-      </ion-label>
-      <ion-button fill="clear" color="danger" slot="end" (click)="confirmDelete(item); $event.stopPropagation()">
-        <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
-      </ion-button>
-    </ion-item>
-  </ion-list>
+    <!-- Search Bar -->
+    <ion-searchbar
+      placeholder="Search by name, supplier, or ID..."
+      (ionInput)="onSearchInput($event)"
+      class="item-searchbar">
+    </ion-searchbar>
 
-  <!-- Edit Form (shown when item selected) -->
-  <ion-card *ngIf="selectedItem()">
-    <ion-card-header>
-      <ion-card-title>Edit: {{ selectedItem()?.itemName }}</ion-card-title>
-      <ion-button fill="clear" (click)="cancelEdit()" slot="end">
-        <ion-icon name="close-outline" slot="icon-only"></ion-icon>
-      </ion-button>
-    </ion-card-header>
-    <ion-card-content>
-      <form [formGroup]="updateForm" (ngSubmit)="onUpdate()">
+    <!-- Category Filter Chips -->
+    <div class="filter-chips-container">
+      <ion-chip [color]="categoryFilter() === '' ? 'primary' : 'medium'"
+                (click)="setCategoryFilter('')"
+                class="filter-chip">
+        <ion-label>All</ion-label>
+      </ion-chip>
+      <ion-chip *ngFor="let cat of categories"
+                [color]="categoryFilter() === cat ? 'primary' : 'medium'"
+                (click)="setCategoryFilter(cat)"
+                class="filter-chip">
+        <ion-label>{{ cat }}</ion-label>
+      </ion-chip>
+    </div>
 
-        <ion-item>
-          <ion-label position="stacked">Item Name *</ion-label>
-          <ion-input formControlName="itemName" type="text"></ion-input>
-          <ion-note *ngIf="getErrorMessage('itemName')" color="danger" slot="helper">{{ getErrorMessage('itemName') }}</ion-note>
-        </ion-item>
+    <!-- Items List -->
+    <ion-list *ngIf="filteredItems().length > 0; else emptyList" class="items-list">
+      <ion-list-header>
+        <ion-label>{{ filteredItems().length }} item(s) found</ion-label>
+      </ion-list-header>
 
-        <ion-item>
-          <ion-label position="stacked">Category *</ion-label>
-          <ion-select formControlName="category" interface="action-sheet">
-            <ion-select-option *ngFor="let cat of categories" [value]="cat">{{ cat }}</ion-select-option>
-          </ion-select>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="stacked">Quantity *</ion-label>
-          <ion-input formControlName="quantity" type="number" min="0"></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="stacked">Price (AUD) *</ion-label>
-          <ion-input formControlName="price" type="number" min="0.01" step="0.01"></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="stacked">Supplier Name *</ion-label>
-          <ion-input formControlName="supplierName" type="text"></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="stacked">Featured Item Rating *</ion-label>
-          <ion-input formControlName="featuredItem" type="number" min="0"></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="stacked">Special Note</ion-label>
-          <ion-textarea formControlName="specialNote" rows="3"></ion-textarea>
-        </ion-item>
-
-        <ion-button expand="block" type="submit" [disabled]="updateForm.invalid" color="primary">
-          <ion-icon name="save-outline" slot="start"></ion-icon>
-          Update Item
+      <ion-item *ngFor="let item of filteredItems(); trackBy: trackByItemId"
+                [button]="true"
+                (click)="selectItem(item)"
+                [detail]="true"
+                class="item-row">
+        <ion-icon [name]="item.category === 'Laptop' ? 'laptop-outline' :
+                         item.category === 'Phone' ? 'phone-portrait-outline' :
+                         item.category === 'Tablet' ? 'tablet-portrait-outline' :
+                         item.category === 'Headphones' ? 'headset-outline' :
+                         'hardware-chip-outline'"
+                  slot="start" color="primary"></ion-icon>
+        <ion-label>
+          <h3>{{ item.itemName }}</h3>
+          <p>ID: {{ item.itemId }} | {{ item.category }} | Qty: {{ item.quantity }}</p>
+          <p *ngIf="item.featuredItem > 0" class="featured-badge-small">⭐ Featured: {{ item.featuredItem }}</p>
+        </ion-label>
+        <ion-badge slot="end" [color]="item.quantity === 0 ? 'danger' : item.quantity <= 5 ? 'warning' : 'success'">
+          {{ item.quantity === 0 ? 'Out' : item.quantity <= 5 ? 'Low' : 'In Stock' }}
+        </ion-badge>
+        <ion-button fill="clear" color="danger" slot="end" (click)="confirmDelete(item, $event)" class="delete-btn">
+          <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
         </ion-button>
+      </ion-item>
+    </ion-list>
 
-      </form>
-    </ion-card-content>
-  </ion-card>
+    <!-- Empty State -->
+    <ng-template #emptyList>
+      <div class="empty-state">
+        <ion-icon name="search-outline" class="empty-icon"></ion-icon>
+        <p>No items found matching your search.</p>
+        <ion-button fill="outline" size="small" (click)="searchQuery.set(''); categoryFilter.set('')">
+          Clear Filters
+        </ion-button>
+      </div>
+    </ng-template>
+
+  </ng-container>
+
+  <!-- ============ EDIT VIEW (when item selected) ============ -->
+  <div *ngIf="isEditMode()" class="edit-mode-container">
+    <ion-card class="edit-card">
+      <ion-card-header>
+        <ion-card-subtitle>Editing Item #{{ selectedItem()?.itemId }}</ion-card-subtitle>
+        <ion-card-title>{{ selectedItem()?.itemName }}</ion-card-title>
+        <ion-button fill="clear" (click)="cancelEdit()" slot="end" class="close-edit-btn">
+          <ion-icon name="close-circle-outline" slot="icon-only" color="medium"></ion-icon>
+        </ion-button>
+      </ion-card-header>
+      <ion-card-content>
+        <form [formGroup]="updateForm" (ngSubmit)="onUpdate()">
+
+          <ion-item [class.field-error]="hasError('itemName')">
+            <ion-label position="stacked">Item Name *</ion-label>
+            <ion-input formControlName="itemName" type="text" placeholder="Enter item name"></ion-input>
+            <ion-note *ngIf="getErrorMessage('itemName')" color="danger" slot="helper">{{ getErrorMessage('itemName') }}</ion-note>
+          </ion-item>
+
+          <ion-item [class.field-error]="hasError('category')">
+            <ion-label position="stacked">Category *</ion-label>
+            <ion-select formControlName="category" interface="action-sheet" placeholder="Select category">
+              <ion-select-option *ngFor="let cat of categories" [value]="cat">{{ cat }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item [class.field-error]="hasError('quantity')">
+            <ion-label position="stacked">Quantity *</ion-label>
+            <ion-input formControlName="quantity" type="number" min="0" placeholder="0"></ion-input>
+            <ion-note *ngIf="getErrorMessage('quantity')" color="danger" slot="helper">{{ getErrorMessage('quantity') }}</ion-note>
+          </ion-item>
+
+          <ion-item [class.field-error]="hasError('price')">
+            <ion-label position="stacked">Price (AUD) *</ion-label>
+            <ion-input formControlName="price" type="number" min="0.01" step="0.01" placeholder="0.01"></ion-input>
+            <ion-note *ngIf="getErrorMessage('price')" color="danger" slot="helper">{{ getErrorMessage('price') }}</ion-note>
+          </ion-item>
+
+          <ion-item [class.field-error]="hasError('supplierName')">
+            <ion-label position="stacked">Supplier Name *</ion-label>
+            <ion-input formControlName="supplierName" type="text" placeholder="Enter supplier name"></ion-input>
+            <ion-note *ngIf="getErrorMessage('supplierName')" color="danger" slot="helper">{{ getErrorMessage('supplierName') }}</ion-note>
+          </ion-item>
+
+          <ion-item [class.field-error]="hasError('featuredItem')">
+            <ion-label position="stacked">Featured Item Rating *</ion-label>
+            <ion-input formControlName="featuredItem" type="number" min="0" placeholder="0"></ion-input>
+            <ion-note *ngIf="getErrorMessage('featuredItem')" color="danger" slot="helper">{{ getErrorMessage('featuredItem') }}</ion-note>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Special Note</ion-label>
+            <ion-textarea formControlName="specialNote" rows="3" placeholder="Optional notes..."></ion-textarea>
+          </ion-item>
+
+          <div class="form-actions">
+            <ion-button expand="block" type="submit" [disabled]="updateForm.invalid" color="primary" class="submit-btn">
+              <ion-icon name="save-outline" slot="start"></ion-icon>
+              Update Item
+            </ion-button>
+            <ion-button expand="block" fill="outline" (click)="cancelEdit()" color="medium" class="cancel-btn">
+              <ion-icon name="close-outline" slot="start"></ion-icon>
+              Cancel
+            </ion-button>
+          </div>
+
+        </form>
+      </ion-card-content>
+    </ion-card>
+  </div>
 
 </ion-content>
