@@ -262,4 +262,12 @@ export class ApiService {
   clearError(): void {
     this.errorSignal.set(null);
   }
+
+  /**
+   * Clear current feedback message
+   * Called when user dismisses a feedback banner
+   */
+  clearFeedback(): void {
+    this.feedbackSignal.set(null);
+  }
 }
