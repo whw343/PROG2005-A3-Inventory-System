@@ -1,0 +1,42 @@
+<!-- ======================================
+  PROG2005 Assignment 3
+  Privacy & Security Page (Tab 4)
+  Author: daitongxiao
+  ====================================== -->
+
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Privacy & Security</ion-title>
+    <app-help-widget [content]="helpContent" slot="end"></app-help-widget>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <ion-card class="intro-card">
+    <ion-card-header>
+      <ion-card-title>🔒 Privacy & Security Analysis</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p class="intro-text">
+        This page provides a comprehensive analysis of privacy and security considerations
+        for the PROG2005 Inventory Management System. Tap each section to expand the details.
+      </p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-list>
+    <ion-item *ngFor="let section of sections; let i = index" [button]="true" (click)="toggleSection(i)" class="section-header">
+      <ion-icon [name]="section.icon" slot="start" color="primary"></ion-icon>
+      <ion-label>{{ section.title }}</ion-label>
+      <ion-icon [name]="expandedIndex() === i ? 'chevron-up-outline' : 'chevron-down-outline'" slot="end" color="medium"></ion-icon>
+    </ion-item>
+
+    <ion-card *ngIf="expandedIndex() >= 0" class="section-content expanded">
+      <ion-card-content>
+        <p>{{ sections[expandedIndex()].content }}</p>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+
+</ion-content>

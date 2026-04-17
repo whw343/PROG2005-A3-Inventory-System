@@ -1,0 +1,38 @@
+/* ======================================
+  PROG2005 Assignment 3
+  Privacy & Security Page Styles - Tab 4
+  Author: daitongxiao
+  ====================================== */
+
+.intro-card {
+  margin: 16px;
+}
+
+.intro-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ion-color-medium);
+}
+
+.section-header {
+  --padding-start: 16px;
+  font-weight: 600;
+}
+
+.section-content {
+  margin: 0 16px 8px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+}
+
+.section-content.expanded {
+  max-height: 500px;
+  padding: 8px 0;
+}
+
+.section-content p {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--ion-text-color);
+}
