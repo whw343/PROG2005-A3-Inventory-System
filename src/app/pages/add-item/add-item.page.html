@@ -16,6 +16,14 @@
 
 <ion-content [fullscreen]="true" class="add-item-content">
 
+  <!-- Pull to Refresh (must be inside ion-content) -->
+  <ion-refresher slot="fixed" (ionRefresh)="onRefreshFeatured($event)">
+    <ion-refresher-content
+      pullingText="Pull to refresh featured items..."
+      refreshingSpinner="circles">
+    </ion-refresher-content>
+  </ion-refresher>
+
   <!-- ====== Success Feedback Banner ====== -->
   <div class="feedback-banner feedback-success"
        *ngIf="apiService.feedbackMessage()?.type === 'success'"
@@ -248,12 +256,6 @@
         Total value: <strong>${{ getFeaturedTotalValue().toFixed(2) }}</strong>
       </ion-card-subtitle>
     </ion-card-header>
-
-    <!-- Pull to Refresh -->
-    <ion-refresher-content
-      pullingText="Pull to refresh featured items..."
-      refreshingSpinner="circles">
-    </ion-refresher-content>
 
     <ion-card-content>
       <!-- Loading Skeleton -->
