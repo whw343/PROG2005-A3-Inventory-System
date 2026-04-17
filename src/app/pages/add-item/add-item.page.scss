@@ -1,30 +1,430 @@
 /* ======================================
   PROG2005 Assignment 3
   Add Item Page Styles - Tab 2
-  Author: Bingru Song
+  Author: Bingru Song (BingruSong)
   ====================================== */
 
-.feedback-item {
-  --padding-start: 16px;
-  --padding-end: 16px;
-  font-size: 14px;
+/* ---- Feedback Banners ---- */
+.feedback-banner {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  margin: 8px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  animation: slideDown 0.3s ease-out;
+
+  .feedback-icon { font-size: 20px; margin-right: 10px; }
+  .feedback-text { flex: 1; font-size: 14px; font-weight: 500; }
+  .feedback-close { font-size: 18px; opacity: 0.7; }
 }
 
 .feedback-success {
-  --background: var(--ion-color-success-tint);
-  color: var(--ion-color-success-shade);
+  background: var(--ion-color-success-tint, #e8f5e9);
+  color: var(--ion-color-success-shade, #2e7d32);
+  border-left: 4px solid var(--ion-color-success, #4caf50);
 }
 
 .feedback-error {
-  --background: var(--ion-color-danger-tint);
-  color: var(--ion-color-danger-shade);
+  background: var(--ion-color-danger-tint, #ffebee);
+  color: var(--ion-color-danger-shade, #c62828);
+  border-left: 4px solid var(--ion-color-danger, #f44336);
 }
 
-ion-card {
-  margin: 16px;
+/* ---- Card Base ---- */
+.add-form-card,
+.featured-card,
+.empty-featured-card {
+  margin: 8px 16px;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.card-header {
+  padding-bottom: 8px;
+
+  .card-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 17px;
+    font-weight: 600;
+
+    .card-title-icon {
+      font-size: 20px;
+    }
+  }
+
+  ion-card-subtitle {
+    font-size: 12px;
+    margin-top: 2px;
+    opacity: 0.75;
+  }
+}
+
+/* ---- Featured Card ---- */
+.featured-header {
+  border-bottom: 1px solid var(--ion-color-light-shade, #e0e0e0);
+}
+
+.featured-count-badge {
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+/* ---- Form Styles ---- */
+.add-form {
+  padding-top: 4px;
+}
+
+.form-field {
+  margin-bottom: 8px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+.form-field.field-error {
+  .form-item {
+    --background: var(--ion-color-danger-tint, #ffebee);
+    border-left: 3px solid var(--ion-color-danger, #f44336);
+  }
+}
+
+.form-item {
+  --padding-start: 8px;
+  --inner-padding-end: 8px;
+  --background: transparent;
+  border-radius: 10px;
+  border: 1px solid var(--ion-color-light-shade, #e0e0e0);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:focus-within {
+    border-color: var(--ion-color-primary, #3880ff);
+    box-shadow: 0 0 0 3px rgba(56, 128, 255, 0.12);
+  }
+}
+
+.field-icon {
+  font-size: 20px;
+  min-width: 28px;
+}
+
+.field-input,
+.field-select {
+  font-size: 15px;
+  --padding-start: 8px;
+}
+
+/* Required asterisk */
+.required {
+  color: var(--ion-color-danger, #f44336);
+}
+
+.optional {
+  color: var(--ion-color-medium, #92949c);
+  font-size: 11px;
+  font-weight: normal;
+}
+
+/* Inline error message */
+.field-error-msg {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 16px 6px 44px;
+  font-size: 12px;
+  color: var(--ion-color-danger, #c62828);
+  background: var(--ion-color-danger-tint, #ffebee);
+  border-radius: 0 0 10px 10px;
+  margin-top: -2px;
+
+  ion-icon { font-size: 14px; }
+
+  &.inline {
+    display: inline;
+    background: transparent;
+    padding: 0;
+    margin-left: 8px;
+  }
+}
+
+.field-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 16px 4px 44px;
+  font-size: 11px;
+  color: var(--ion-color-medium, #92949c);
+}
+
+/* ---- Form Row (side-by-side fields) ---- */
+.form-row {
+  display: flex;
+  gap: 12px;
+
+  .form-field.half {
+    flex: 1;
+  }
+}
+
+/* ---- Featured Item Rating ---- */
+.featured-field {
+  .featured-item-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.featured-input-wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.featured-input {
+  width: 80px;
+  flex-shrink: 0;
+}
+
+.featured-stars {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+
+  .star-icon {
+    font-size: 18px;
+    cursor: default;
+  }
+
+  .featured-hint {
+    font-size: 11px;
+    color: var(--ion-color-medium, #92949c);
+    margin-left: 6px;
+    white-space: nowrap;
+  }
+}
+
+/* ---- Character Counter ---- */
+.char-count {
+  font-size: 11px;
+  color: var(--ion-color-medium, #92949c);
+
+  &:has(+ .field-error-msg) {
+    color: var(--ion-color-danger, #c62828);
+  }
+}
+
+/* ---- Form Actions ---- */
+.form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+  padding-bottom: 8px;
 }
 
 .submit-button {
-  margin-top: 20px;
-  --border-radius: 8px;
+  --border-radius: 10px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  height: 48px;
+
+  .btn-spinner {
+    margin-right: 8px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.reset-button {
+  --border-radius: 10px;
+  height: 40px;
+  font-size: 13px;
+}
+
+/* ---- Category Option ---- */
+.category-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+/* ---- Featured Items List ---- */
+.featured-list {
+  padding: 0;
+  background: transparent;
+}
+
+.featured-item {
+  --padding-start: 8px;
+  --inner-padding-end: 8px;
+  margin-bottom: 4px;
+  border-radius: 10px;
+  border: 1px solid var(--ion-color-light-shade, #e0e0e0);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &.low-stock {
+    border-left: 3px solid var(--ion-color-warning, #ffc107);
+  }
+
+  &.out-of-stock {
+    border-left: 3px solid var(--ion-color-danger, #f44336);
+    opacity: 0.75;
+  }
+}
+
+.item-icon {
+  font-size: 24px;
+  min-width: 32px;
+}
+
+.item-label {
+  .item-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ion-text-color);
+    margin-bottom: 4px;
+  }
+
+  .item-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--ion-color-medium, #92949c);
+    margin-bottom: 2px;
+  }
+
+  .category-tag {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+
+    ion-icon { font-size: 11px; }
+  }
+
+  .stock-dot {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+
+    .dot-success { color: var(--ion-color-success, #4caf50); }
+    .dot-warning { color: var(--ion-color-warning, #ffc107); }
+    .dot-danger { color: var(--ion-color-danger, #f44336); }
+
+    ion-icon { font-size: 8px; }
+  }
+
+  .special-note-preview {
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+    font-size: 11px;
+    color: var(--ion-color-medium, #92949c);
+    font-style: italic;
+    margin-top: 2px;
+    line-height: 1.4;
+
+    ion-icon {
+      font-size: 12px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+  }
+}
+
+.item-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  min-width: 70px;
+}
+
+.price-badge {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.featured-stars-inline {
+  display: flex;
+  gap: 1px;
+
+  .star {
+    font-size: 12px;
+  }
+}
+
+/* ---- Skeleton Loading ---- */
+.skeleton-list ion-item {
+  --padding-start: 8px;
+  --inner-padding-end: 8px;
+  min-height: 72px;
+  margin-bottom: 4px;
+}
+
+/* ---- Empty State ---- */
+.empty-featured-card .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  text-align: center;
+
+  .empty-icon {
+    font-size: 48px;
+    color: var(--ion-color-medium-shade, #92949c);
+    opacity: 0.4;
+    margin-bottom: 12px;
+  }
+
+  .empty-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ion-color-medium, #92949c);
+    margin-bottom: 6px;
+  }
+
+  .empty-subtitle {
+    font-size: 13px;
+    color: var(--ion-color-medium-shade, #92949c);
+    line-height: 1.5;
+    max-width: 280px;
+  }
+}
+
+/* ---- Animations ---- */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 400px) {
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .add-form-card,
+  .featured-card,
+  .empty-featured-card,
+  .feedback-banner {
+    margin-left: 8px;
+    margin-right: 8px;
+  }
 }
