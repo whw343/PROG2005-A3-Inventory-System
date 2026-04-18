@@ -14,31 +14,7 @@
 
 import { Component } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
-import { RouterModule, Routes } from '@angular/router';
-
-const routes: Routes = [
-  {
-    path: 'inventory',
-    loadComponent: () => import('../inventory/inventory.page').then(m => m.InventoryPage),
-  },
-  {
-    path: 'add-item',
-    loadComponent: () => import('../add-item/add-item.page').then(m => m.AddItemPage),
-  },
-  {
-    path: 'update-delete',
-    loadComponent: () => import('../update-delete/update-delete.page').then(m => m.UpdateDeletePage),
-  },
-  {
-    path: 'privacy-security',
-    loadComponent: () => import('../privacy-security/privacy-security.page').then(m => m.PrivacySecurityPage),
-  },
-  {
-    path: '',
-    redirectTo: 'inventory',
-    pathMatch: 'full',
-  }
-];
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-tabs',

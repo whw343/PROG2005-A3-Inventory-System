@@ -5,7 +5,7 @@
   ====================================== -->
 
 <!-- Help Button -->
-<ion-button fill="clear" (click)="toggleHelp()" class="help-trigger" [attr.aria-label]="'Open help panel'">
+<ion-button fill="clear" (click)="toggleHelp()" class="help-trigger">
   <ion-icon name="help-circle-outline" slot="icon-only" color="light"></ion-icon>
 </ion-button>
 
@@ -20,7 +20,7 @@
         <ion-icon name="information-circle-outline" class="title-icon"></ion-icon>
         {{ content.title }}
       </ion-title>
-      <ion-button fill="clear" slot="end" (click)="closeHelp()" [attr.aria-label]="'Close help panel'">
+      <ion-button fill="clear" slot="end" (click)="closeHelp()">
         <ion-icon name="close-outline" slot="icon-only" color="light"></ion-icon>
       </ion-button>
     </ion-toolbar>
